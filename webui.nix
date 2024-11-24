@@ -2,9 +2,12 @@
   lib,
   config,
   dream2nix,
-  src,
+  pkgs,
   ...
 }:
+let
+  src = pkgs.callPackage ./src.nix { };
+in
 {
   imports = [
     dream2nix.modules.dream2nix.nodejs-package-lock-v3

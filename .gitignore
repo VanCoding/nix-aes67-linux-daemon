@@ -1,3 +1,5 @@
 /result
 /daemon.conf
 /status.json
+/.direnv
+/nixos.qcow2

@@ -4,8 +4,11 @@
   boost,
   avahi,
   alsa-lib,
-  src,
+  callPackage,
 }:
+let
+  src = callPackage ./src.nix { };
+in
 stdenv.mkDerivation {
   pname = "aes67-linux-daemon-tests";
   version = src.version;

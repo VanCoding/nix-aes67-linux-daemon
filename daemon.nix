@@ -6,8 +6,11 @@
   alsa-lib,
   systemd,
   faac,
-  src,
+  callPackage,
 }:
+let
+  src = callPackage ./src.nix { };
+in
 stdenv.mkDerivation {
   pname = "aes67-linux-daemon";
   version = src.version;

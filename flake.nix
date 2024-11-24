@@ -9,7 +9,19 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
 
       flake.nixosModules.default = import ./module.nix self;
-
+      flake.nixosConfigurations.test = inputs.nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          self.nixosModules.default
+          (
+            { pkgs, ... }:
+            {
+              services.mingetty.autologinUser = "root";
+              console.keyMap = "de_CH-latin1";
+            }
+          )
+        ];
+      };
       systems = [ "x86_64-linux" ];
       perSystem =
         {
@@ -31,40 +43,34 @@
             buildInputs = [ pkgs.nixfmt-rfc-style ];
           };
 
-          packages =
-            let
-              src = pkgs.callPackage ./src.nix { };
-            in
-            rec {
-              daemon = pkgs.callPackage ./daemon.nix { inherit src; };
-              tests = pkgs.callPackage ./tests.nix { inherit src; };
-              webui = dream2nix.lib.evalModules {
-                packageSets.nixpkgs = pkgs;
+          packages = rec {
+            daemon = pkgs.callPackage ./daemon.nix { };
+            tests = pkgs.callPackage ./tests.nix { };
+            webui = dream2nix.lib.evalModules {
+              packageSets.nixpkgs = pkgs;
+              modules = [
+                ./webui.nix
+              ];
+            };
+            default = pkgs.symlinkJoin {
+              name = "aes67-linux-daemon";
+              paths = [
+                daemon
+                tests
+                webui
+              ];
+            };
+            start =
+              (lib.evalModules {
                 modules = [
-                  ./webui.nix
+                  self.nixosModules.default
                 ];
                 specialArgs = {
-                  inherit src;
+                  inherit pkgs;
                 };
-              };
-              default = pkgs.symlinkJoin {
-                name = "aes67-linux-daemon";
-                paths = [
-                  daemon
-                  tests
-                  webui
-                ];
-              };
-              test =
-                (lib.evalModules {
-                  modules = [
-                    self.nixosModules.default
-                  ];
-                  specialArgs = {
-                    inherit pkgs;
-                  };
-                }).config.aes67-linux-daemon.start;
-            };
+              }).config.aes67-daemon.start;
+            start-vm = self.nixosConfigurations.test.config.system.build.vm;
+          };
         };
     };
 }
