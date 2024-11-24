@@ -1,11 +1,11 @@
 { fetchFromGitHub }:
 rec {
-  version = "81db129b2c0022154296201f52dde3d35b7f5af1";
+  version = "3f017f8d5d606489c32c2789480ba626586e9d55";
   src = fetchFromGitHub {
     owner = "VanCoding";
     repo = "aes67-linux-daemon";
     rev = version;
-    hash = "sha256-pX/bDmz8zZPp+78vRjw0H5OkPbtqfTS0ko1M0+rnCnk=";
+    hash = "sha256-iQYOs6msP1buB1pDmsdOvUNp+Zhlgoe33nGGA7ZuOoA=";
     fetchSubmodules = true;
   };
 }
