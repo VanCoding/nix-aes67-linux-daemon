@@ -1,11 +1,12 @@
 { fetchFromGitHub }:
 rec {
-  version = "d90e7cae20b831461fff046cf989f72371f6acdf";
+  version = "6563a56da463b458202ee72ed518572c116537f1";
   src = fetchFromGitHub {
     owner = "bondagit";
     repo = "aes67-linux-daemon";
     rev = version;
-    hash = "sha256-m5pq4AhpgH8N2eDCT8eNRwONBvO3XA/4YbY2i3srwss=";
+    name = version;
+    hash = "sha256-0Xg0WHaoVaJ3kFN78hbpYjbm/0On+eRKlPhRaUWZ71w=";
     fetchSubmodules = true;
   };
 }
